@@ -28,4 +28,8 @@ app.get("/", (req, res) => {
     res.send("We just created our first server!");
 });
 
+app.get("/blogs", (req, res) => {
+    res.json(blogs);
+});
+
 app.listen(port, () => console.log(`Blog server listening at http://localhost:${port}`));
