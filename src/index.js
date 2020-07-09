@@ -1,34 +1,30 @@
 import express from "express";
 import cors from "cors";
+import {json} from "body-parser";
 
 const app = express();
 const port = 8080;
 
 app.use(cors({origin: "http://localhost:3000"}));
+app.use(json());
 
-const blogs = [
-    {
-        id: "blog3",
-        text: "This is our third blog",
-        createdAt: new Date()
-    },
-    {
-        id: "blog2",
-        text: "This is our second blog",
-        createdAt: new Date()
-    },
-    {
-        id: "blog1",
-        text: "This is our first blog",
-        createdAt: new Date()
-    }
-]
+const blogs = []
 
 app.get("/", (req, res) => {
     res.send("We just created our first server!");
 });
 
 app.get("/blogs", (req, res) => {
+    res.json(blogs);
+});
+
+app.post("/create-blog", (req, res) => {
+    const newBlog = {
+        id: "blog-" + blogs.length.toString(),
+        text: req.body.text,
+        createdAt: new Date()
+    }
+    blogs.unshift(newBlog);
     res.json(blogs);
 });
 
