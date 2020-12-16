@@ -1,6 +1,15 @@
 import express from "express";
 import cors from "cors";
 import {json} from "body-parser";
+import {MongoClient} from "mongodb";
+
+let database;
+
+MongoClient.connect("mongodb://localhost:27017/", function(err, db) {
+    if (err) throw err;
+    database = db.db("blog");
+    console.log("database initialized!");
+});
 
 const app = express();
 const port = 8080;
