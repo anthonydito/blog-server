@@ -33,8 +33,8 @@ app.get("/", (req, res) => {
     res.send("We just created our first server!");
 });
 
-app.get("/blogs", (req, res) => {
-    res.json(blogs);
+app.get("/blogs", (req, res, next) => {
+    handleUserBlogsRequest(req, res, next);
 });
 
 app.post("/create-blog", (req, res, next) => {
