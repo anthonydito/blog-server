@@ -46,7 +46,7 @@ app.post("/create-blog", (req, res, next) => {
         if (err) {
             next(err);
         } else {
-
+            handleUserBlogsRequest(req, res, next);
         }
     });
 });
