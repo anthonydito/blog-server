@@ -27,8 +27,6 @@ const handleUserBlogsRequest = (req, res, next) => {
 app.use(cors({origin: "http://localhost:3000"}));
 app.use(json());
 
-const blogs = []
-
 app.get("/", (req, res) => {
     res.send("We just created our first server!");
 });
