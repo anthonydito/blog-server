@@ -14,6 +14,16 @@ MongoClient.connect("mongodb://localhost:27017/", function(err, db) {
 const app = express();
 const port = 8080;
 
+const handleUserBlogsRequest = (req, res, next) => {
+    database.collection("blogs").find({}).sort({ createdAt: -1 }).toArray((err, results) => {
+        if (err) {
+            next(err);
+        } else {
+            res.json(results);
+        }
+    });
+};
+
 app.use(cors({origin: "http://localhost:3000"}));
 app.use(json());
 
