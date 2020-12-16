@@ -27,14 +27,18 @@ app.get("/blogs", (req, res) => {
     res.json(blogs);
 });
 
-app.post("/create-blog", (req, res) => {
+app.post("/create-blog", (req, res, next) => {
     const newBlog = {
-        id: "blog-" + blogs.length.toString(),
         text: req.body.text,
         createdAt: new Date()
     }
-    blogs.unshift(newBlog);
-    res.json(blogs);
+    database.collection("blogs").insertOne(newBlog, (err) => {
+        if (err) {
+            next(err);
+        } else {
+
+        }
+    });
 });
 
 app.listen(port, () => console.log(`Blog server listening at http://localhost:${port}`));
