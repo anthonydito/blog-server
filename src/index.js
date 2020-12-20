@@ -49,4 +49,8 @@ app.post("/create-blog", (req, res, next) => {
     });
 });
 
+app.post("/sign-up", (req, res, next) => {
+
+});
+
 app.listen(port, () => console.log(`Blog server listening at http://localhost:${port}`));
