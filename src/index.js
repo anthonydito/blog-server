@@ -51,7 +51,9 @@ app.post("/create-blog", (req, res, next) => {
 });
 
 app.post("/sign-up", (req, res, next) => {
+    bycrypt.hash(req.body.password, 10, (err, hash) => {
 
+    });
 });
 
 app.listen(port, () => console.log(`Blog server listening at http://localhost:${port}`));
