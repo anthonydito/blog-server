@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import {json} from "body-parser";
 import {MongoClient} from "mongodb";
+import bycrypt from "bcrypt";
 
 let database;
 
@@ -46,6 +47,36 @@ app.post("/create-blog", (req, res, next) => {
         } else {
             handleUserBlogsRequest(req, res, next);
         }
+    });
+});
+
+app.post("/sign-up", (req, res, next) => {
+    database.collection("users").findOne({ username: req.body.username }, (err, existingUser) => {
+        if (err) {
+            next(err);
+            return;
+        }
+        if (existingUser) {
+            next(new Error("username exists"))
+            return;
+        }
+        bycrypt.hash(req.body.password, 10, (err, hash) => {
+            if (err) {
+                next(err)
+            } else {
+                const newUser = {
+                    username: req.body.username,
+                    password: hash
+                };
+                database.collection("users").insertOne(newUser, (err) => {
+                    if (err) {
+                        next(err);
+                    } else {
+                        res.send("Placeholder for now... Later we will send an access token!");
+                    }
+                });
+            }
+        });
     });
 });
 
