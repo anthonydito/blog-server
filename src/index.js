@@ -3,7 +3,7 @@ import cors from "cors";
 import {json} from "body-parser";
 import {MongoClient} from "mongodb";
 import bycrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { decode } from "jsonwebtoken";
 
 let database;
 
@@ -30,6 +30,22 @@ const JWT_SECRET = "make_this_whatever_you_want_but_keep_it_secret";
 
 const issueAccessToken = (user) => {
     return jwt.sign({_id: user._id}, JWT_SECRET);
+};
+
+const authorizationMiddleware = (req, res, next) => {
+    const accessToken = req.headers["x-blog-access-token"];
+    if (!accessToken) {
+        next(new Error("Access token not present in request"));
+        return;
+    }
+    jwt.verify(accessToken, JWT_SECRET, (err, decoded) => {
+        if (err) {
+            next(err);
+        } else {
+            req.user_id = decoded._id;
+            next();
+        }
+    });
 };
 
 app.use(cors({origin: "http://localhost:3000"}));
