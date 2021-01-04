@@ -59,10 +59,11 @@ app.get("/blogs", authorizationMiddleware, (req, res, next) => {
     handleUserBlogsRequest(req, res, next);
 });
 
-app.post("/create-blog", (req, res, next) => {
+app.post("/create-blog", authorizationMiddleware, (req, res, next) => {
     const newBlog = {
         text: req.body.text,
-        createdAt: new Date()
+        createdAt: new Date(),
+        user_id: req.user_id
     }
     database.collection("blogs").insertOne(newBlog, (err) => {
         if (err) {
