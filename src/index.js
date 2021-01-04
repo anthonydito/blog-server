@@ -17,7 +17,7 @@ const app = express();
 const port = 8080;
 
 const handleUserBlogsRequest = (req, res, next) => {
-    database.collection("blogs").find({}).sort({ createdAt: -1 }).toArray((err, results) => {
+    database.collection("blogs").find({user_id: req.user_id}).sort({ createdAt: -1 }).toArray((err, results) => {
         if (err) {
             next(err);
         } else {
@@ -55,14 +55,15 @@ app.get("/", (req, res) => {
     res.send("We just created our first server!");
 });
 
-app.get("/blogs", (req, res, next) => {
+app.get("/blogs", authorizationMiddleware, (req, res, next) => {
     handleUserBlogsRequest(req, res, next);
 });
 
-app.post("/create-blog", (req, res, next) => {
+app.post("/create-blog", authorizationMiddleware, (req, res, next) => {
     const newBlog = {
         text: req.body.text,
-        createdAt: new Date()
+        createdAt: new Date(),
+        user_id: req.user_id
     }
     database.collection("blogs").insertOne(newBlog, (err) => {
         if (err) {
