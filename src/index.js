@@ -55,7 +55,7 @@ app.get("/", (req, res) => {
     res.send("We just created our first server!");
 });
 
-app.get("/blogs", (req, res, next) => {
+app.get("/blogs", authorizationMiddleware, (req, res, next) => {
     handleUserBlogsRequest(req, res, next);
 });
 
