@@ -3,6 +3,7 @@ import cors from "cors";
 import {json} from "body-parser";
 import {MongoClient} from "mongodb";
 import bycrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 let database;
 
@@ -23,6 +24,12 @@ const handleUserBlogsRequest = (req, res, next) => {
             res.json(results);
         }
     });
+};
+
+const JWT_SECRET = "make_this_whatever_you_want_but_keep_it_secret";
+
+const issueAccessToken = (user) => {
+    return jwt.sign({_id: user._id}, JWT_SECRET);
 };
 
 app.use(cors({origin: "http://localhost:3000"}));
@@ -68,11 +75,12 @@ app.post("/sign-up", (req, res, next) => {
                     username: req.body.username,
                     password: hash
                 };
-                database.collection("users").insertOne(newUser, (err) => {
+                database.collection("users").insertOne(newUser, (err, response) => {
                     if (err) {
                         next(err);
                     } else {
-                        res.send("Placeholder for now... Later we will send an access token!");
+                        const accessToken = issueAccessToken(response.ops[0]);
+                        res.json({accessToken: accessToken});
                     }
                 });
             }
