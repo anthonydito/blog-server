@@ -17,7 +17,7 @@ const app = express();
 const port = 8080;
 
 const handleUserBlogsRequest = (req, res, next) => {
-    database.collection("blogs").find({}).sort({ createdAt: -1 }).toArray((err, results) => {
+    database.collection("blogs").find({user_id: req.user_id}).sort({ createdAt: -1 }).toArray((err, results) => {
         if (err) {
             next(err);
         } else {
