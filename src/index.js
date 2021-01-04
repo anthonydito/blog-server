@@ -75,11 +75,12 @@ app.post("/sign-up", (req, res, next) => {
                     username: req.body.username,
                     password: hash
                 };
-                database.collection("users").insertOne(newUser, (err) => {
+                database.collection("users").insertOne(newUser, (err, response) => {
                     if (err) {
                         next(err);
                     } else {
-                        res.send("Placeholder for now... Later we will send an access token!");
+                        const accessToken = issueAccessToken(response.ops[0]);
+                        res.json({accessToken: accessToken});
                     }
                 });
             }
