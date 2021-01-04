@@ -26,6 +26,12 @@ const handleUserBlogsRequest = (req, res, next) => {
     });
 };
 
+const JWT_SECRET = "make_this_whatever_you_want_but_keep_it_secret";
+
+const issueAccessToken = (user) => {
+    return jwt.sign({_id: user._id}, JWT_SECRET);
+};
+
 app.use(cors({origin: "http://localhost:3000"}));
 app.use(json());
 
