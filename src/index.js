@@ -105,4 +105,29 @@ app.post("/sign-up", (req, res, next) => {
     });
 });
 
+app.post("/log-in", (req, res, next) => {
+    database.collection("users").findOne({ username: req.body.username }, (err, existingUser) => {
+        if (err) {
+            next(err);
+            return;
+        }
+        if (!existingUser) {
+            next(new Error("unauthorized"));
+            return;
+        }
+        bycrypt.compare(req.body.password, existingUser.password, (err, same) => {
+            if (err) {
+                next(err);
+                return;
+            }
+            if (same) {
+                const accessToken = issueAccessToken(existingUser);
+                res.json({accessToken: accessToken});
+            } else {
+                next(new Error("unauthorized"))
+            }
+        });
+    });
+});
+
 app.listen(port, () => console.log(`Blog server listening at http://localhost:${port}`));
