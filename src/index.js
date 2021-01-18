@@ -105,4 +105,8 @@ app.post("/sign-up", (req, res, next) => {
     });
 });
 
+app.post("/log-in", (req, res, next) => {
+
+});
+
 app.listen(port, () => console.log(`Blog server listening at http://localhost:${port}`));
